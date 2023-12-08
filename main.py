@@ -69,11 +69,28 @@ def data_opns(df):
             st.write(grouped_df)
 
     elif operation == "Aggregate":
-        agg_column = st.selectbox("Select a column for aggregation", df.columns)
-        aggregation = st.selectbox("Select an aggregation function", ["mean", "sum", "count"])
-        aggregated_df = df.groupby(agg_column).agg({agg_column: aggregation}).reset_index()
-        st.write("Aggregated Data:")
-        st.write(aggregated_df)
+        numeric_columns = df.select_dtypes(include='number').columns
+
+        if len(numeric_columns) == 0:
+            st.warning("No numeric columns found for aggregation.")
+        else:
+            aggregation = st.selectbox("Select an aggregation function", ["mean", "sum", "count"])
+
+            aggregated_data = {}
+
+            for column in numeric_columns:
+                if aggregation == "mean":
+                    result = df[column].mean()
+                elif aggregation == "sum":
+                    result = df[column].sum()
+                elif aggregation == "count":
+                    result = df[column].count()
+
+                aggregated_data[f"{column}_{aggregation}"] = result
+
+            st.write("Aggregated Data:")
+            st.write(pd.Series(aggregated_data))
+
 
     elif operation == "Slice and Dice":
         slice_column = st.selectbox("Select a column for slicing", df.columns)
@@ -97,7 +114,7 @@ def show_logs():
         st.write(entry)
  
 def main():
-    st.title("datavisualizer")
+    st.title("DataVisualizer")
     
     contributers = ["Kushal Vadodaria - 60003210188", "Isha Mistry - 60003210197", "Kely Mistry - 60003210197"]
     st.markdown("### Project contributers:")
