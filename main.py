@@ -74,7 +74,7 @@ def data_opns(df):
         if len(numeric_columns) == 0:
             st.warning("No numeric columns found for aggregation.")
         else:
-            aggregation = st.selectbox("Select an aggregation function", ["mean", "sum", "count"])
+            aggregation = st.selectbox("Select an aggregation function", ["mean", "median", "sum", "count"])
 
             aggregated_data = {}
 
@@ -85,6 +85,8 @@ def data_opns(df):
                     result = df[column].sum()
                 elif aggregation == "count":
                     result = df[column].count()
+                elif aggregation == "median":
+                    result = df[column].median()
 
                 aggregated_data[f"{column}_{aggregation}"] = result
 
